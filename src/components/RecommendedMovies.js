@@ -7,10 +7,11 @@ const RecommendedMovies = ({ movies, getId }) => {
       <h1 className="title is2">Suggestions</h1>
       {movies.map((movie,index) =>
         index < 6 &&
-            <img
-              key={index}
-              className="column is-5 related"
-              onClick={() => getId(movie.id)} src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}/>)}
+          <img
+            key={index}
+            className="column is-5 related"
+            onClick={() => getId(movie.id)} src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+          />)}
     </div>
   )
 }

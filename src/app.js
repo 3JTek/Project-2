@@ -5,15 +5,14 @@ import axios from 'axios'
 import 'bulma'
 import './style.scss'
 
-const apiKey = '&apikey=6116c432'
-const baseUrl = 'http://www.omdbapi.com/'
+const apiKeyMovieDB = process.env.MOVIEDB_KEY
+const apiKeyOMDB = process.env.OMDB_KEY
+const baseUrlOMDB = `https://www.omdbapi.com/?apikey=${apiKeyOMDB}`
 
 import DisplayTime from './components/DisplayTime'
 import DisplayMoviesWatched from './components/DisplayMoviesWatched'
-import MovieCard from './components/MovieCard'
 import SearchBar from './components/SearchBar.js'
 import RecommendedMovies from './components/RecommendedMovies.js'
-import DisplayTweets from './components/DisplayTweets.js'
 
 class App extends React.Component {
   constructor(){
@@ -44,7 +43,7 @@ class App extends React.Component {
 
   getPossibleResults(){
     axios
-      .get(`${baseUrl}?s=${this.state.searchText}${apiKey}`)
+      .get(`${baseUrlOMDB}&s=${this.state.searchText}`)
       .then(res => {
         const filtered = res.data.Search.filter(result => result.Type==='movie')
         this.setState({ possibleResults: filtered })
@@ -58,7 +57,7 @@ class App extends React.Component {
     if(imdb) imdbID = imdb
     this.setState({ searchText: '', possibleResults: []})
     axios
-      .get(`${baseUrl}?i=${imdbID}${apiKey}`)
+      .get(`${baseUrlOMDB}&i=${imdbID}`)
       .then(res => {
         this.setState({
           timeWatched: this.state.timeWatched + parseFloat(res.data.Runtime),
@@ -67,39 +66,25 @@ class App extends React.Component {
       })
     const movieName = e.currentTarget.firstElementChild.innerHTML.replace(' ', '')
     console.log(movieName)
-    this.getTweets(movieName)
+    // this.getTweets(movieName)
     this.getRelatedMovies(imdbID)
   }
 
-  getTweets(movieName){
-    axios(
-      {
-        method: 'GET',
-        url: `http://localhost:3000/?movie=${movieName}`,
-        headers: {
-          'x-requested-with': '',
-          'Access-Control-Allow-Origin': '*'
-        }
-      }
-    ).then(res => this.setState({tweets: res.data}))
-  }
-
   getId(id){
-    axios.get(`http://api.themoviedb.org/3/movie/${id}?api_key=adfdea606b119c5d76189ff434738475`)
+    axios.get(`http://api.themoviedb.org/3/movie/${id}?api_key=${apiKeyMovieDB}`)
       .then(res => this.getMovie(res.data.imdb_id))
   }
 
   getRelatedMovies(id){
     axios
-      .get(`https://api.themoviedb.org/3/find/${id}?api_key=adfdea606b119c5d76189ff434738475&external_source=imdb_id`)
-        .then(res => this.makeRecommendedRequest(res.data.movie_results[0].id))
+      .get(`https://api.themoviedb.org/3/find/${id}?api_key=${apiKeyMovieDB}&external_source=imdb_id`)
+      .then(res => this.makeRecommendedRequest(res.data.movie_results[0].id))
   }
 
   makeRecommendedRequest(id){
-    axios.get(`https://api.themoviedb.org/3/movie/${id}/recommendations?api_key=adfdea606b119c5d76189ff434738475`)
+    axios.get(`https://api.themoviedb.org/3/movie/${id}/recommendations?api_key=${apiKeyMovieDB}`)
       .then(res => this.setState({ relatedMovies: res.data.results}))
   }
-
 
   render() {
     return (
@@ -119,7 +104,6 @@ class App extends React.Component {
             </div>
           </div>
         </section>
-
 
         <section className="columns section">
 

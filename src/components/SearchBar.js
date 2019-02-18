@@ -1,13 +1,11 @@
 import React from 'react'
 
-
 const SearchBar = ({ searchText, handleChange, possibleResults, getMovie }) => {
   return(
     <div>
       <input
         autoComplete="off"
         id="search-bar"
-        // className="column is-8"
         value={searchText}
         onChange={handleChange}
       />
@@ -29,7 +27,5 @@ const SearchBar = ({ searchText, handleChange, possibleResults, getMovie }) => {
     </div>
   )
 }
-
-
 
 export default SearchBar
