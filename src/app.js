@@ -71,7 +71,7 @@ class App extends React.Component {
   }
 
   getId(id){
-    axios.get(`http://api.themoviedb.org/3/movie/${id}?api_key=${apiKeyMovieDB}`)
+    axios.get(`https://api.themoviedb.org/3/movie/${id}?api_key=${apiKeyMovieDB}`)
       .then(res => this.getMovie(res.data.imdb_id))
   }
 
